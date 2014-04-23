@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/Scripts/jtable/themes/metro/blue/jtable.css" />
+}
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/jtable/jquery.jtable.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('#PeopleTable').jtable({
+                title: 'My Phone Book',
+                actions: {
+                    listAction: '@Url.Action("PeopleList")',
+                    createAction: '@Url.Action("CreatePerson")',
+                    updateAction: '@Url.Action("UpdatePerson")',
+                    deleteAction: '@Url.Action("DeletePerson")'
+                },
+                fields: {
+                    Id: {
+                        key: true,
+                        list: false
+                    },
+                    //CHILD TABLE (PHONE NUMBERS)
+                    Phones: {
+                        title: '',
+                        width: '1%',
+                        sorting: false,
+                        edit: false,
+                        create: false,
+                        display: function (personData) {
+                            //Create an image that will be used to open child table
+                            var $img = $('<img class="open-child-table" src="@Url.Content("~/Content/Images/phone.png")" title="Show phone numbers" />');
+                            //Open child table when user clicks the image
+                            $img.click(function () {
+                                $('#PeopleTable').jtable('openChildTable',
+                                        $img.closest('tr'),
+                                        {
+                                            title: ' &gt; ' + personData.record.Name + ' - Phone numbers',
+                                            actions: {
+                                                listAction: '@Url.Action("PhoneList", "Home")?personId=' + personData.record.Id,
+                                                createAction: '@Url.Action("CreatePhone", "Home")',
+                                                updateAction: '@Url.Action("UpdatePhone", "Home")',
+                                                deleteAction: '@Url.Action("DeletePhone", "Home")'
+                                            },
+                                            fields: {
+                                                Id: {
+                                                    key: true,
+                                                    list: false
+                                                },
+                                                PersonId: {
+                                                    type: 'hidden',
+                                                    defaultValue: personData.record.Id
+                                                },
+                                                Type: {
+                                                    title: 'Phone type',
+                                                    width: '35%',
+                                                    options: { '1': 'Home phone', '2': 'Office phone', '3': 'Cell phone' }
+                                                },
+                                                Number: {
+                                                    title: 'Phone Number',
+                                                    width: '35%'
+                                                },
+                                                RecordDate: {
+                                                    title: 'Record date',
+                                                    width: '30%',
+                                                    type: 'date',
+                                                    displayFormat: 'dd.mm.yy',
+                                                    create: false,
+                                                    edit: false
+                                                }
+                                            }
+                                        }, function (data) { //opened handler
+                                            data.childTable.jtable('load');
+                                        });
+                            });
+                            //Return image to show on the person row
+                            return $img;
+                        }
+                    },
+                    Name: {
+                        title: 'Name',
+                        width: '30%'
+                    },
+                    CityId: {
+                        title: 'City',
+                        width: '30%',
+                        options: '@Url.Action("CityList")'
+                    },
+                    BirthDay: {
+                        title: 'Birth day',
+                        width: '20%',
+                        type: 'date',
+                        displayFormat: 'dd.mm.yy'
+                    },
+                    Notes: {
+                        title: 'Additional notes',
+                        type: 'textarea',
+                        list: false
+                    },
+                    RecordDate: {
+                        title: 'Record date',
+                        width: '20%',
+                        type: 'date',
+                        displayFormat: 'dd.mm.yy',
+                        create: false,
+                        edit: false
+                    }
+                }
+            });
+
+            $('#PeopleTable').jtable('load');
+
+        });
+    </script>
+}
+
+<div id="PeopleTable"></div>

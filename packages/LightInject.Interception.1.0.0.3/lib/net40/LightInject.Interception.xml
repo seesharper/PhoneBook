@@ -1,0 +1,583 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LightInject.Interception</name>
+    </assembly>
+    <members>
+        <member name="T:LightInject.InterceptionContainerExtensions">
+            <summary>
+            Extends the <see cref="T:LightInject.IServiceRegistry"/> interface by adding methods for 
+            creating proxy-based decorators.
+            </summary>
+        </member>
+        <member name="M:LightInject.InterceptionContainerExtensions.Intercept(LightInject.IServiceRegistry,System.Func{LightInject.ServiceRegistration,System.Boolean},System.Type[],System.Action{LightInject.IServiceFactory,LightInject.Interception.ProxyDefinition})">
+            <summary>
+            Decorates the service identified by the <paramref name="serviceSelector"/> delegate with a dynamic proxy type
+            that is used to decorate the target type.
+            </summary>
+            <param name="serviceRegistry">The target <see cref="T:LightInject.IServiceRegistry"/> instance.</param>
+            <param name="serviceSelector">A function delegate that is used to determine if the proxy-based decorator should be applied to the target service.</param>
+            <param name="additionalInterfaces">A list of additional interface that will be implemented by the proxy type.</param>
+            <param name="defineProxyType">An action delegate that is used to define the proxy type.</param>
+        </member>
+        <member name="M:LightInject.InterceptionContainerExtensions.Intercept(LightInject.IServiceRegistry,System.Func{LightInject.ServiceRegistration,System.Boolean},System.Action{LightInject.IServiceFactory,LightInject.Interception.ProxyDefinition})">
+            <summary>
+            Decorates the service identified by the <paramref name="serviceSelector"/> delegate with a dynamic proxy type
+            that is used to decorate the target type.
+            </summary>
+            <param name="serviceRegistry">The target <see cref="T:LightInject.IServiceRegistry"/> instance.</param>
+            <param name="serviceSelector">A function delegate that is used to determine if the proxy-based decorator should be applied to the target service.</param>        
+            <param name="defineProxyType">An action delegate that is used to define the proxy type.</param>
+        </member>
+        <member name="M:LightInject.InterceptionContainerExtensions.Intercept(LightInject.IServiceRegistry,System.Func{LightInject.ServiceRegistration,System.Boolean},System.Func{LightInject.IServiceFactory,LightInject.Interception.IInterceptor})">
+            <summary>
+            Decorates the service identified by the <paramref name="serviceSelector"/> delegate with a dynamic proxy type
+            that is used to decorate the target type.
+            </summary>
+            <param name="serviceRegistry">The target <see cref="T:LightInject.IServiceRegistry"/> instance.</param>
+            <param name="serviceSelector">A function delegate that is used to determine if the proxy-based decorator should be applied to the target service.</param>        
+            <param name="getInterceptor">A function delegate that is used to create the <see cref="T:LightInject.Interception.IInterceptor"/> instance.</param>        
+        </member>
+        <member name="M:LightInject.InterceptionContainerExtensions.Intercept(LightInject.IServiceRegistry,System.Func{System.Reflection.MethodInfo,System.Boolean},System.Func{LightInject.Interception.IInvocationInfo,System.Object})">
+            <summary>
+            Intercepts methods that matches the <paramref name="methodSelector"/> and uses the <paramref name="implementation"/> delegate 
+            to implement the intercepted methods.
+            </summary>
+            <param name="serviceRegistry">The target <see cref="T:LightInject.IServiceRegistry"/> instance.</param>
+            <param name="methodSelector">A function delegate used to select the methods to be implemented.</param>
+            <param name="implementation">A delegate that represents the implementation of the intercepted methods.</param>
+        </member>
+        <member name="T:LightInject.Interception.IProxy">
+            <summary>
+            Implemented by all proxy types.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.IProxy.Target">
+            <summary>
+            Gets the proxy target.
+            </summary>
+        </member>
+        <member name="T:LightInject.Interception.IInvocationInfo">
+            <summary>
+            Represents a class that contains detailed information about the method being invoked.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.IInvocationInfo.Proceed">
+            <summary>
+            Proceeds to the next <see cref="T:LightInject.Interception.IInterceptor"/>, or of at the end of the interceptor chain, 
+            proceeds to the actual target.
+            </summary>
+            <returns>The return value from the method call.</returns>
+        </member>
+        <member name="P:LightInject.Interception.IInvocationInfo.Method">
+            <summary>
+            Gets the <see cref="T:System.Reflection.MethodInfo"/> currently being invoked.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.IInvocationInfo.Proxy">
+            <summary>
+            Gets the <see cref="T:LightInject.Interception.IProxy"/> instance that intercepted the method call.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.IInvocationInfo.Arguments">
+            <summary>
+            Gets the arguments currently being passed to the target method.
+            </summary>
+        </member>
+        <member name="T:LightInject.Interception.IMethodBuilder">
+            <summary>
+            Represents a class that is capable of creating a delegate used to invoke 
+            a method without using late-bound invocation.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.IMethodBuilder.GetDelegate(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a delegate that is used to invoke the <paramref name="targetMethod"/>.
+            </summary>
+            <param name="targetMethod">The <see cref="T:System.Reflection.MethodInfo"/> that represents the target method to invoke.</param>
+            <returns>A delegate that represents compiled code used to invoke the <paramref name="targetMethod"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.IDynamicMethodSkeleton">
+            <summary>
+            Represents the skeleton of a dynamic method.
+            </summary>    
+        </member>
+        <member name="M:LightInject.Interception.IDynamicMethodSkeleton.GetILGenerator">
+            <summary>
+            Gets the <see cref="T:System.Reflection.Emit.ILGenerator"/> used to emit the method body.
+            </summary>
+            <returns>An <see cref="T:System.Reflection.Emit.ILGenerator"/> instance.</returns>
+        </member>
+        <member name="M:LightInject.Interception.IDynamicMethodSkeleton.CreateDelegate">
+            <summary>
+            Create a delegate used to invoke the dynamic method.
+            </summary>
+            <returns>A function delegate.</returns>
+        </member>
+        <member name="T:LightInject.Interception.IProxyBuilder">
+            <summary>
+            Represents a class that is capable of creating a proxy <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.IProxyBuilder.GetProxyType(LightInject.Interception.ProxyDefinition)">
+            <summary>
+            Gets a proxy type based on the given <paramref name="definition"/>.
+            </summary>
+            <param name="definition">A <see cref="T:LightInject.Interception.ProxyDefinition"/> instance that contains information about the 
+            proxy type to be created.</param>
+            <returns>A proxy <see cref="T:System.Type"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.IInterceptor">
+            <summary>
+            Represents a class that intercepts method calls.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.IInterceptor.Invoke(LightInject.Interception.IInvocationInfo)">
+            <summary>
+            Invoked when a method call is intercepted.
+            </summary>
+            <param name="invocationInfo">The <see cref="T:LightInject.Interception.IInvocationInfo"/> instance that 
+            contains information about the current method call.</param>
+            <returns>The return value from the method.</returns>
+        </member>
+        <member name="T:LightInject.Interception.ITypeBuilderFactory">
+            <summary>
+            Represents a class that is capable of creating a <see cref="T:System.Reflection.Emit.TypeBuilder"/> that 
+            is used to build the proxy type.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.ITypeBuilderFactory.CreateTypeBuilder(System.Type,System.Type[])">
+            <summary>
+            Creates a <see cref="T:System.Reflection.Emit.TypeBuilder"/> instance that is used to build a proxy 
+            type that inherits/implements the <paramref name="targetType"/> with an optional 
+            set of <paramref name="additionalInterfaces"/>.
+            </summary>
+            <param name="targetType">The <see cref="T:System.Type"/> that the <see cref="T:System.Reflection.Emit.TypeBuilder"/> will inherit/implement.</param>
+            <param name="additionalInterfaces">A set of additional interfaces to be implemented.</param>
+            <returns>A <see cref="T:System.Reflection.Emit.TypeBuilder"/> instance for which to build the proxy type.</returns>
+        </member>
+        <member name="M:LightInject.Interception.ITypeBuilderFactory.CreateType(System.Reflection.Emit.TypeBuilder)">
+            <summary>
+            Creates a proxy <see cref="T:System.Type"/> based on the given <paramref name="typeBuilder"/>.
+            </summary>
+            <param name="typeBuilder">The <see cref="T:System.Reflection.Emit.TypeBuilder"/> that represents the proxy type.</param>
+            <returns>The proxy <see cref="T:System.Type"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.MethodInterceptorFactory">
+            <summary>
+            A factory class used to create a <see cref="T:LightInject.Interception.CompositeInterceptor"/> if the target method has 
+            multiple interceptors.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.MethodInterceptorFactory.CreateMethodInterceptor(System.Lazy{LightInject.Interception.IInterceptor}[])">
+            <summary>
+            Creates a new <see cref="T:System.Lazy`1"/> that represents getting the <see cref="T:LightInject.Interception.IInterceptor"/> for a given method.
+            </summary>
+            <param name="interceptors">A list of interceptors that represents the interceptor chain for a given method.</param>
+            <returns>A new <see cref="T:System.Lazy`1"/> that represents getting the <see cref="T:LightInject.Interception.IInterceptor"/> for a given method.</returns>
+        </member>
+        <member name="T:LightInject.Interception.TargetMethodInfo">
+            <summary>
+            Contains information about the target method being intercepted.
+            </summary>
+        </member>
+        <member name="F:LightInject.Interception.TargetMethodInfo.ProceedDelegate">
+            <summary>
+            The function delegate used to invoke the target method.
+            </summary>
+        </member>
+        <member name="F:LightInject.Interception.TargetMethodInfo.Method">
+            <summary>
+            The <see cref="T:System.Reflection.MethodInfo"/> that represents the target method.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.TargetMethodInfo.#ctor(System.Reflection.MethodInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.TargetMethodInfo"/> class.
+            </summary>
+            <param name="method">The target <see cref="T:System.Reflection.MethodInfo"/> being intercepted.</param>
+        </member>
+        <member name="T:LightInject.Interception.OpenGenericTargetMethodInfo">
+            <summary>
+            Contains information about the open generic target method being intercepted.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.OpenGenericTargetMethodInfo.#ctor(System.Reflection.MethodInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.OpenGenericTargetMethodInfo"/> class.
+            </summary>
+            <param name="openGenericMethod">The open generic target <see cref="T:System.Reflection.MethodInfo"/>.</param>
+        </member>
+        <member name="M:LightInject.Interception.OpenGenericTargetMethodInfo.GetTargetMethodInfo(System.Type[])">
+            <summary>
+            Gets the <see cref="T:LightInject.Interception.TargetMethodInfo"/> that represents the closed generic <see cref="T:System.Reflection.MethodInfo"/>.
+            based on the given <paramref name="typeArguments"/>.
+            </summary>
+            <param name="typeArguments">A list of types used to create a closed generic target <see cref="T:System.Reflection.MethodInfo"/>.</param>
+            <returns>The <see cref="T:LightInject.Interception.TargetMethodInfo"/> that represents the closed generic <see cref="T:System.Reflection.MethodInfo"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.DynamicMethodBuilder">
+            <summary>
+            A class that is capable of creating a delegate used to invoke 
+            a method without using late-bound invocation.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.DynamicMethodBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.DynamicMethodBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.DynamicMethodBuilder.GetDelegate(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a delegate that is used to invoke the <paramref name="targetMethod"/>.
+            </summary>
+            <param name="targetMethod">The <see cref="T:System.Reflection.MethodInfo"/> that represents the target method to invoke.</param>
+            <returns>A delegate that represents compiled code used to invoke the <paramref name="targetMethod"/>.</returns>
+        </member>
+        <member name="M:LightInject.Interception.DynamicMethodBuilder.DynamicMethodSkeleton.GetILGenerator">
+            <summary>
+            Gets the <see cref="T:System.Reflection.Emit.ILGenerator"/> used to emit the method body.
+            </summary>
+            <returns>An <see cref="T:System.Reflection.Emit.ILGenerator"/> instance.</returns>
+        </member>
+        <member name="M:LightInject.Interception.DynamicMethodBuilder.DynamicMethodSkeleton.CreateDelegate">
+            <summary>
+            Create a delegate used to invoke the dynamic method.
+            </summary>
+            <returns>A function delegate.</returns>
+        </member>
+        <member name="T:LightInject.Interception.CachedMethodBuilder">
+            <summary>
+            An <see cref="T:LightInject.Interception.IMethodBuilder"/> cache decorator that ensures that 
+            for a given <see cref="T:System.Reflection.MethodInfo"/>, only a single dynamic method is created.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.CachedMethodBuilder.#ctor(LightInject.Interception.IMethodBuilder)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.CachedMethodBuilder"/> class.
+            </summary>
+            <param name="methodBuilder">The target <see cref="T:LightInject.Interception.IMethodBuilder"/> instance.</param>
+        </member>
+        <member name="M:LightInject.Interception.CachedMethodBuilder.GetDelegate(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a delegate that is used to invoke the <paramref name="targetMethod"/>.
+            </summary>
+            <param name="targetMethod">The <see cref="T:System.Reflection.MethodInfo"/> that represents the target method to invoke.</param>
+            <returns>A delegate that represents compiled code used to invoke the <paramref name="targetMethod"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.TargetInvocationInfo">
+            <summary>
+            An implementation of the <see cref="T:LightInject.Interception.IInvocationInfo"/> interface that forwards 
+            method calls the actual target.
+            </summary>    
+        </member>
+        <member name="M:LightInject.Interception.TargetInvocationInfo.#ctor(LightInject.Interception.TargetMethodInfo,LightInject.Interception.IProxy,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.TargetInvocationInfo"/> class.
+            </summary>
+            <param name="targetMethodInfo">The <see cref="T:LightInject.Interception.TargetMethodInfo"/> that contains 
+            information about the target method.</param>
+            <param name="proxy">The <see cref="T:LightInject.Interception.IProxy"/> instance that intercepted the method call.</param>
+            <param name="arguments">The arguments currently being passed to the target method.</param>
+        </member>
+        <member name="M:LightInject.Interception.TargetInvocationInfo.Proceed">
+            <summary>
+            Proceeds to the actual <see cref="P:LightInject.Interception.IProxy.Target"/>.
+            </summary>
+            <returns>The return value from the method call.</returns>
+        </member>
+        <member name="P:LightInject.Interception.TargetInvocationInfo.Method">
+            <summary>
+            Gets the <see cref="T:System.Reflection.MethodInfo"/> currently being invoked.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.TargetInvocationInfo.Proxy">
+            <summary>
+            Gets the <see cref="T:LightInject.Interception.IProxy"/> instance that intercepted the method call.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.TargetInvocationInfo.Arguments">
+            <summary>
+            Gets the arguments currently being passed to the target method.
+            </summary>
+        </member>
+        <member name="T:LightInject.Interception.InterceptorInvocationInfo">
+            <summary>
+            An implementation of the <see cref="T:LightInject.Interception.IInvocationInfo"/> interface that forwards 
+            method calls to the next <see cref="T:LightInject.Interception.IInterceptor"/> in the interceptor chain.
+            </summary>    
+        </member>
+        <member name="M:LightInject.Interception.InterceptorInvocationInfo.#ctor(LightInject.Interception.IInvocationInfo,System.Lazy{LightInject.Interception.IInterceptor})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.InterceptorInvocationInfo"/> class.
+            </summary>
+            <param name="nextInvocationInfo">The next <see cref="T:LightInject.Interception.IInvocationInfo"/> used to invoke the <paramref name="nextInterceptor"/>.</param>
+            <param name="nextInterceptor">The next <see cref="T:LightInject.Interception.IInterceptor"/> in the interceptor chain.</param>
+        </member>
+        <member name="M:LightInject.Interception.InterceptorInvocationInfo.Proceed">
+            <summary>
+            Proceeds to the next <see cref="T:LightInject.Interception.IInterceptor"/> in the interceptor chain.
+            </summary>
+            <returns>The return value from the method call.</returns>
+        </member>
+        <member name="P:LightInject.Interception.InterceptorInvocationInfo.Method">
+            <summary>
+            Gets the <see cref="T:System.Reflection.MethodInfo"/> currently being invoked.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.InterceptorInvocationInfo.Proxy">
+            <summary>
+            Gets the <see cref="T:LightInject.Interception.IProxy"/> instance that intercepted the method call.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.InterceptorInvocationInfo.Arguments">
+            <summary>
+            Gets the arguments currently being passed to the target method.
+            </summary>
+        </member>
+        <member name="T:LightInject.Interception.CompositeInterceptor">
+            <summary>
+            A composite <see cref="T:LightInject.Interception.IInterceptor"/> that is responsible for 
+            passing the <see cref="T:LightInject.Interception.IInvocationInfo"/> down the interceptor chain.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.CompositeInterceptor.#ctor(System.Lazy{LightInject.Interception.IInterceptor}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.CompositeInterceptor"/> class.
+            </summary>
+            <param name="interceptors">The <see cref="T:LightInject.Interception.IInterceptor"/> chain to be invoked.</param>
+        </member>
+        <member name="M:LightInject.Interception.CompositeInterceptor.Invoke(LightInject.Interception.IInvocationInfo)">
+            <summary>
+            Invoked when a method call is intercepted.
+            </summary>
+            <param name="invocationInfo">The <see cref="T:LightInject.Interception.IInvocationInfo"/> instance that 
+            contains information about the current method call.</param>
+            <returns>The return value from the method.</returns>
+        </member>
+        <member name="T:LightInject.Interception.InterceptorInfo">
+            <summary>
+            Contains information about a registered <see cref="T:LightInject.Interception.IInterceptor"/>.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.InterceptorInfo.InterceptorFactory">
+            <summary>
+            Gets or sets the function delegate used to create the <see cref="T:LightInject.Interception.IInterceptor"/> instance.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.InterceptorInfo.MethodSelector">
+            <summary>
+            Gets or sets the function delegate used to selected the methods to be intercepted.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.InterceptorInfo.Index">
+            <summary>
+            Gets or sets the index of this <see cref="T:LightInject.Interception.InterceptorInfo"/> instance.
+            </summary>
+        </member>
+        <member name="T:LightInject.Interception.ProxyDefinition">
+            <summary>
+            Represents the definition of a proxy type.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.ProxyDefinition.#ctor(System.Type,System.Type[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.ProxyDefinition"/> class.
+            </summary>
+            <param name="targetType">The type of object to proxy.</param>        
+            <param name="additionalInterfaces">A list of additional interfaces to be implemented by the proxy type.</param>
+        </member>
+        <member name="M:LightInject.Interception.ProxyDefinition.#ctor(System.Type,System.Func{System.Object},System.Type[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.ProxyDefinition"/> class.
+            </summary>
+            <param name="targetType">The type of object to proxy.</param>
+            <param name="targetFactory">A function delegate used to create the target instance.</param>
+            <param name="additionalInterfaces">A list of additional interfaces to be implemented by the proxy type.</param>
+        </member>
+        <member name="M:LightInject.Interception.ProxyDefinition.Implement(System.Func{LightInject.Interception.IInterceptor},System.Func{System.Reflection.MethodInfo,System.Boolean})">
+            <summary>
+            Implements the methods identified by the <paramref name="methodSelector"/> by forwarding method calls
+            to the <see cref="T:LightInject.Interception.IInterceptor"/> created by the <paramref name="interceptorFactory"/>.
+            </summary>
+            <param name="interceptorFactory">A function delegate used to create the <see cref="T:LightInject.Interception.IInterceptor"/> instance.</param>
+            <param name="methodSelector">A function delegate used to select the methods to be implemented.</param>
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:LightInject.Interception.ProxyDefinition.Implement(System.Func{LightInject.Interception.IInterceptor})">
+            <summary>
+            Implements all methods by forwarding method calls
+            to the <see cref="T:LightInject.Interception.IInterceptor"/> created by the <paramref name="interceptorFactory"/>.
+            </summary>        
+            <param name="interceptorFactory">A function delegate used to create the <see cref="T:LightInject.Interception.IInterceptor"/> instance.</param>       
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:LightInject.Interception.ProxyDefinition.AddCustomAttributes(System.Reflection.CustomAttributeData[])">
+            <summary>
+            Adds a custom <see cref="T:System.Attribute"/> to the proxy type.
+            </summary>
+            <param name="customAttributeData">The <see cref="T:System.Reflection.CustomAttributeData"/> instance that 
+            represents the custom attribute to be added to the proxy type.</param>
+            <returns>This instance.</returns>
+        </member>
+        <member name="P:LightInject.Interception.ProxyDefinition.TargetType">
+            <summary>
+            Gets the proxy target type.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.ProxyDefinition.TargetFactory">
+            <summary>
+            Gets the function delegate used to create the proxy target.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.ProxyDefinition.AdditionalInterfaces">
+            <summary>
+            Gets an list of additional interfaces to be implemented by the proxy type.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.ProxyDefinition.Interceptors">
+            <summary>
+            Gets a list of the registered <see cref="T:LightInject.Interception.InterceptorInfo"/> instances.
+            </summary>
+        </member>
+        <member name="P:LightInject.Interception.ProxyDefinition.TypeAttributes">
+            <summary>
+            Gets a list of the registered <see cref="T:System.Reflection.CustomAttributeData"/> instances.
+            </summary>
+        </member>
+        <member name="T:LightInject.Interception.InterceptionMethodInfoExtensions">
+            <summary>
+            Extends the <see cref="T:System.Reflection.MethodInfo"/> class.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.InterceptionMethodInfoExtensions.GetDeclaringType(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the declaring type of the target <paramref name="method"/>.
+            </summary>
+            <param name="method">The <see cref="T:System.Reflection.MethodInfo"/> for which to return the declaring type.</param>
+            <returns>The type that declares the target <paramref name="method"/>.</returns>
+        </member>
+        <member name="M:LightInject.Interception.InterceptionMethodInfoExtensions.IsDeclaredBy(System.Reflection.MethodInfo,System.Type)">
+            <summary>
+            Gets a value that indicates whether the <paramref name="method"/> is declared by the given <paramref name="type"/>.
+            </summary>
+            <param name="method">The <see cref="T:System.Reflection.MethodInfo"/> for which to check the declaring type.</param>
+            <param name="type">The <see cref="T:System.Type"/> to check against the declaring type of the <paramref name="method"/>.</param>
+            <returns>true if the <paramref name="method"/> is declared by the given <paramref name="type"/>, otherwise, false.</returns>
+        </member>
+        <member name="M:LightInject.Interception.InterceptionMethodInfoExtensions.IsDeclaredBy``1(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a value that indicates whether the <paramref name="method"/> is declared <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to check against the declaring type of the <paramref name="method"/>.</typeparam>
+            <param name="method">The <see cref="T:System.Reflection.MethodInfo"/> for which to check the declaring type.</param>
+            <returns>true if the <paramref name="method"/> is declared by <typeparamref name="T"/>, otherwise, false.</returns>
+        </member>
+        <member name="M:LightInject.Interception.InterceptionMethodInfoExtensions.IsPropertySetter(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a value that indicates whether the <paramref name="method"/> represent a property setter.
+            </summary>
+            <param name="method">The target <see cref="T:System.Reflection.MethodInfo"/>.</param>
+            <returns>true if the <paramref name="method"/> represent a property setter, otherwise , false.</returns>
+        </member>
+        <member name="M:LightInject.Interception.InterceptionMethodInfoExtensions.IsPropertyGetter(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a value that indicates whether the <paramref name="method"/> represent a property getter.
+            </summary>
+            <param name="method">The target <see cref="T:System.Reflection.MethodInfo"/>.</param>
+            <returns>true if the <paramref name="method"/> represent a property getter, otherwise , false.</returns>
+        </member>
+        <member name="M:LightInject.Interception.InterceptionMethodInfoExtensions.GetProperty(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the <see cref="T:System.Reflection.PropertyInfo"/> for which the given <paramref name="method"/> represents a property accessor.
+            </summary>
+            <param name="method">The target <see cref="T:System.Reflection.MethodInfo"/>.</param>
+            <returns>The <see cref="T:System.Reflection.PropertyInfo"/> for which the given <paramref name="method"/> represents a property accessor.</returns>
+        </member>
+        <member name="T:LightInject.Interception.TypeBuilderFactory">
+            <summary>
+            A class that is capable of creating a <see cref="T:System.Reflection.Emit.TypeBuilder"/> that 
+            is used to build the proxy type.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.TypeBuilderFactory.CreateTypeBuilder(System.Type,System.Type[])">
+            <summary>
+            Creates a <see cref="T:System.Reflection.Emit.TypeBuilder"/> instance that is used to build a proxy 
+            type that inherits/implements the <paramref name="targetType"/> with an optional 
+            set of <paramref name="additionalInterfaces"/>.
+            </summary>
+            <param name="targetType">The <see cref="T:System.Type"/> that the <see cref="T:System.Reflection.Emit.TypeBuilder"/> will inherit/implement.</param>
+            <param name="additionalInterfaces">A set of additional interfaces to be implemented.</param>
+            <returns>A <see cref="T:System.Reflection.Emit.TypeBuilder"/> instance for which to build the proxy type.</returns>
+        </member>
+        <member name="M:LightInject.Interception.TypeBuilderFactory.CreateType(System.Reflection.Emit.TypeBuilder)">
+            <summary>
+            Creates a proxy <see cref="T:System.Type"/> based on the given <paramref name="typeBuilder"/>.
+            </summary>
+            <param name="typeBuilder">The <see cref="T:System.Reflection.Emit.TypeBuilder"/> that represents the proxy type.</param>
+            <returns>The proxy <see cref="T:System.Type"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.ProxyBuilder">
+            <summary>
+            A class that is capable of creating a proxy <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.ProxyBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.ProxyBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.ProxyBuilder.GetProxyType(LightInject.Interception.ProxyDefinition)">
+            <summary>
+            Gets a proxy type based on the given <paramref name="definition"/>.
+            </summary>
+            <param name="definition">A <see cref="T:LightInject.Interception.ProxyDefinition"/> instance that contains information about the 
+            proxy type to be created.</param>
+            <returns>A proxy <see cref="T:System.Type"/>.</returns>
+        </member>
+        <member name="T:LightInject.Interception.TypeArrayComparer">
+            <summary>
+            An <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> that is capable of comparing 
+            <see cref="T:System.Type"/> arrays.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.TypeArrayComparer.Equals(System.Type[],System.Type[])">
+            <summary>
+            Determines if two <see cref="T:System.Type"/> arrays are equal.
+            </summary>
+            <param name="x">The first <see cref="T:System.Type"/> array.</param>
+            <param name="y">The second <see cref="T:System.Type"/> array.</param>
+            <returns>true if the specified type arrays are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:LightInject.Interception.TypeArrayComparer.GetHashCode(System.Type[])">
+            <summary>
+            Returns a hash code for the given set of <paramref name="types"/>.
+            </summary>
+            <param name="types">The <see cref="T:System.Type"/> array for which to get the hash code.</param>        
+            <returns>
+            The hash code for the given set of <paramref name="types"/>.
+            </returns>
+        </member>
+        <member name="T:LightInject.Interception.LambdaInterceptor">
+            <summary>
+            A <see cref="T:LightInject.Interception.IInterceptor"/> that uses a function delegate to 
+            provide an implementation for intercepted methods.
+            </summary>
+        </member>
+        <member name="M:LightInject.Interception.LambdaInterceptor.#ctor(System.Func{LightInject.Interception.IInvocationInfo,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LightInject.Interception.LambdaInterceptor"/> class.
+            </summary>
+            <param name="implementation">The function delegate to be used 
+            as the implementation of the intercepted methods.</param>
+        </member>
+        <member name="M:LightInject.Interception.LambdaInterceptor.Invoke(LightInject.Interception.IInvocationInfo)">
+            <summary>
+            Invoked when a method call is intercepted.
+            </summary>
+            <param name="invocationInfo">The <see cref="T:LightInject.Interception.IInvocationInfo"/> instance that 
+            contains information about the current method call.</param>
+            <returns>The return value from the method.</returns>
+        </member>
+    </members>
+</doc>

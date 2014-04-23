@@ -1,0 +1,12 @@
+﻿img.open-child-table {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+img.open-child-table:hover {
+    opacity: 1;
+}
+
+.jtable-child-table-container {
+    margin: 5px;
+}

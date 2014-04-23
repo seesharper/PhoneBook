@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Web", "PhoneBook.Web\PhoneBook.Web.csproj", "{85258F30-E38E-4C59-88B2-CB9EE5493C7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Core", "PhoneBook.Core\PhoneBook.Core.csproj", "{0A4E6CB3-E481-4FD6-BEA3-89D3B04AB112}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{D3DF23CE-1869-43C9-A017-BE9E21064753}"
+	ProjectSection(SolutionItems) = preProject
+		Database\PhoneBookDb.sql = Database\PhoneBookDb.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2656F3A9-A2B2-4352-A8B6-891494BBD9FE}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.ConsoleApp", "PhoneBook.ConsoleApp\PhoneBook.ConsoleApp.csproj", "{6A39CD64-C804-467D-A82F-EE87BE64B965}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Data.NHibernate", "PhoneBook.Data.NHibernate\PhoneBook.Data.NHibernate.csproj", "{A2B8FCF1-899F-4323-9837-3C9EE42F79CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneBook.Dependency", "PhoneBook.Dependency\PhoneBook.Dependency.csproj", "{FD493627-0209-4C82-A857-5651B3A2CC5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85258F30-E38E-4C59-88B2-CB9EE5493C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85258F30-E38E-4C59-88B2-CB9EE5493C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85258F30-E38E-4C59-88B2-CB9EE5493C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85258F30-E38E-4C59-88B2-CB9EE5493C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A4E6CB3-E481-4FD6-BEA3-89D3B04AB112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A4E6CB3-E481-4FD6-BEA3-89D3B04AB112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A4E6CB3-E481-4FD6-BEA3-89D3B04AB112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A4E6CB3-E481-4FD6-BEA3-89D3B04AB112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A39CD64-C804-467D-A82F-EE87BE64B965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A39CD64-C804-467D-A82F-EE87BE64B965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A39CD64-C804-467D-A82F-EE87BE64B965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A39CD64-C804-467D-A82F-EE87BE64B965}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2B8FCF1-899F-4323-9837-3C9EE42F79CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B8FCF1-899F-4323-9837-3C9EE42F79CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2B8FCF1-899F-4323-9837-3C9EE42F79CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B8FCF1-899F-4323-9837-3C9EE42F79CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD493627-0209-4C82-A857-5651B3A2CC5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD493627-0209-4C82-A857-5651B3A2CC5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD493627-0209-4C82-A857-5651B3A2CC5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD493627-0209-4C82-A857-5651B3A2CC5F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
